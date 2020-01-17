@@ -1,2 +1,2 @@
-# grades-app
-Proyecto de Sistema de Notas - Diplomado PHP - Sitio Web en PHP y HTML del proyecto final.
+# Sitio de Sistemas de Notas Estudiantil
+Proyecto de Sistema de Notas - Diplomado PHP - Sitio Web en PHP y HTML del proyecto final. Se describe como un sitio construido en HTML5, PHP y MySQL, que posee muchos aspectos de POO y buenas practicas de codificación en la estructura de MVC. Contiene básicamente contenido de scripts en PHP y maquetado HTML5, probando funcionalidades de Notas estudiantiles en un entorno Académico.

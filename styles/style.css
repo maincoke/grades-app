@@ -1,0 +1,77 @@
+/*
+* Estilos CSS de Sitio de Gestion Academica **\\
+*/
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 0.80em;
+}
+
+label, input, select {
+  display: block !important;
+  margin: 5px;
+  height: 25px;
+  max-width: fit-content;
+}
+
+h1, h2, h3, h4, h5 {
+  text-align: center !important;
+  margin: 5px;
+  padding: 4px;
+}
+
+th {
+  border: 2px solid #83d1ff;
+}
+
+th, td {
+  width: fit-content !important;
+  padding: 0 0.5vw;
+}
+
+.box-login {
+  display: flex;
+  flex-direction: column;
+  max-width: 40%;
+  margin: 0 33%;
+}
+
+#button-login {
+  margin: 10px;
+}
+
+#mainTabs, .title-content {
+  min-width: 800px;
+}
+
+.dark-row {
+  background-color: #494949;
+}
+
+.button-send, .button-add {
+  margin: 10px 5px;
+}
+
+.button-add {
+  float: right;
+}
+
+.container-scroll {
+  height: auto;
+  max-height: 640px;
+  overflow-y: scroll;
+}
+
+.manageUser {
+  display: inline-flex !important;
+}
+
+.modal-fieldset {
+  display: flex;
+  flex-direction: column;
+}
+
+.font-italic {
+  font-style: italic;
+  color: #fff56e;
+  font-weight: bolder;
+}

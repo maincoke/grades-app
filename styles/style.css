@@ -35,8 +35,17 @@ th, td {
   margin: 0 33%;
 }
 
-#button-login {
-  margin: 10px;
+#button-login, #button-logout {
+  margin: 10px !important;
+}
+
+#button-logout {
+  width: 10% !important;
+}
+
+.title-content {
+  display: flex;
+  flex-direction: row;
 }
 
 #mainTabs, .title-content {

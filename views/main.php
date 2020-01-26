@@ -18,8 +18,9 @@
   <link href="../styles/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-  <div>
-    <h2 class="ui-widget-header ui-corner-all title-content">Gestión Académica - Notas de Materias</h2>
+  <div class="title-content">
+    <h2 class="ui-widget-header ui-corner-all" style="width:90%">Gestión Académica - Notas de Materias</h2>
+    <a id="button-logout" class="ui-widget ui-button" style="width:10%;" href="../controlers/userLogout.php">Salir</a>
   </div>
   <div id="mainTabs" class="">
     <ul>
@@ -33,6 +34,7 @@
   <script src="../styles/jquery-ui.js" type="text/javascript"></script>
   <script>
     $("#mainTabs").tabs();
+    $("#button-logout.ui-widget").button();
   </script>
 </body>
 </html>

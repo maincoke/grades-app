@@ -49,20 +49,20 @@ if (isset($_SESSION) && $_SESSION['PROFILE'] == "Administrador") {
   <form action="../controlers/adminAdd.php" method="POST" id="adminForm">
     <fieldset class="modal-fieldset">
       <input type="hidden" name="idadmin" id="idadmin" value="">
-      <label for="name">Nombre(s)</label>
-      <input type="text" name="name" id="name" value="" placeholder="Primer y segundo nombre..." class="ui-corner-all" required>
-      <label for="lastname">Apellido(s)</label>
-      <input type="text" name="lastname" id="lastname" value="" placeholder="Primer y segundo apellido..." class="ui-corner-all" required>
-      <label for="numdocadm">Identificación</label>
-      <input type="text" name="numdocadm" id="numdocadm" value="" placeholder="Número de identificación..." class="ui-corner-all" required>
-      <label for="usermail">Correo Electrónico</label>
-      <input type="email" name="usermail" id="usermail" value="" placeholder="nombrecorreo@dominio.com..." class="ui-corner-all" required>
-      <label for="username">Usuario</label>
-      <input type="text" name="username" id="username" value="" placeholder="nombreUsuario..." class="ui-corner-all" required>
-      <label for="userpass">Contraseña</label>
-      <input type="password" name="userpass" id="userpass" value="" placeholder="Debe contener 8 caracteres..." class="ui-corner-all" required>
-      <label for="userpass">Confirmar contraseña</label>
-      <input type="password" name="confirm" id="confirm" value="" placeholder="Debe coincidir con la anterior..." class="ui-corner-all" required>
+      <label for="nameAdm">Nombre(s)</label>
+      <input type="text" name="nameAdm" id="nameAdm" value="" placeholder="Primer y segundo nombre..." class="ui-corner-all" required>
+      <label for="lastnameAdm">Apellido(s)</label>
+      <input type="text" name="lastnameAdm" id="lastnameAdm" value="" placeholder="Primer y segundo apellido..." class="ui-corner-all" required>
+      <label for="numdocAdm">Identificación</label>
+      <input type="text" name="numdocAdm" id="numdocAdm" value="" placeholder="Número de identificación..." class="ui-corner-all" required>
+      <label for="usermailAdm">Correo Electrónico</label>
+      <input type="email" name="usermailAdm" id="usermailAdm" value="" placeholder="nombrecorreo@dominio.com..." class="ui-corner-all" required>
+      <label for="usernameAdm">Usuario</label>
+      <input type="text" name="usernameAdm" id="usernameAdm" value="" placeholder="nombreUsuario..." class="ui-corner-all" required>
+      <label for="userpassAdm">Contraseña</label>
+      <input type="password" name="userpassAdm" id="userpassAdm" value="" placeholder="Debe contener 8 caracteres..." class="ui-corner-all" required>
+      <label for="confirmAdm">Confirmar contraseña</label>
+      <input type="password" name="confirmAdm" id="confirmAdm" value="" placeholder="Debe coincidir con la anterior..." class="ui-corner-all" required>
     </fieldset>
     <button type="submit" id="manageadmin" class="button button-manage">Registrar</button>
   </form>
@@ -97,14 +97,13 @@ $(".action-admin").click(function(event)  {
       success: function(data) {
         if (data) {
           $('#idadmin').val(data[0].id_admin);
-          $('#name').val(data[0].name);
-          $('#lastname').val(data[0].lastname);
-          $('#numdocadm').val(data[0].document).prop('disabled', true);
-          $('#usermail').val(data[0].email);
-          $('#username').val(data[0].username).prop('disabled', true);
-          $('#userpass').val(data[0].password);
-          $('#confirm').val(data[0].password);
-          $("#modal-manage-admin").dialog("open");
+          $('#nameAdm').val(data[0].name);
+          $('#lastnameAdm').val(data[0].lastname);
+          $('#numdocAdm').val(data[0].document).prop('disabled', true);
+          $('#usermailAdm').val(data[0].email);
+          $('#usernameAdm').val(data[0].username).prop('disabled', true);
+          $('#userpassAdm').val(data[0].password);
+          $('#confirmAdm').val(data[0].password);
         } else {
           alert('No existe el registro! Intente de nuevo..!!');
         }
@@ -114,12 +113,19 @@ $(".action-admin").click(function(event)  {
       }
     });
   } else {
-    $('#username').prop('disabled', false);
-    $('#numdocadm').prop('disabled', false);
+    $('#usernameAdm').prop('disabled', false);
+    $('#numdocAdm').prop('disabled', false);
     $('#adminForm').prop('action', '../controlers/adminAdd.php');
     $('#manageadmin').html('Registrar');
     $("#modal-manage-admin").dialog('option', 'title', 'Registrar nuevo Administrador');
-    $("#modal-manage-admin").dialog("open");
   }
+  $("#modal-manage-admin").dialog("open");
+});
+
+$('#adminForm').submit(function(event) {
+  var validEmail = (/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/gi)
+                  .test($('#usermailAdm').val());
+  var validPword = $('#userpassAdm').val() == $('#confirmAdm').val() ? true : false;
+  return validPword && validEmail;
 });
 </script>

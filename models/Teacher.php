@@ -52,5 +52,19 @@ class Teacher extends User {
     }
     return false;
   }
+
+  public function emailTeacherValidation(string $emailTeacher) {
+    $query = $this->connect->prepare('SELECT email FROM teachers WHERE email = :emailTeacher');
+    $query->execute(array(':emailTeacher' => $emailTeacher));
+    if ($query->rowCount() != 0) {
+      return true;
+    }
+    return false;
+  }
+
+  public function updateDataTeacher() {
+    $query = $this->connect->prepare('UPDATE teachers SET email=:email WHERE id_teacher = :idTeacher');
+    $query->execute(array('idTeacher' => $this->idTeacher));
+  }
 }
 ?>

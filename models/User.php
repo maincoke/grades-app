@@ -48,6 +48,11 @@ class User extends Connection {
     return false;
   }
 
+  public function updateData(int $userId) {
+    $query = $this->connect->prepare('UPDATE users SET name=:name, lastname=:lastname  WHERE id_user = :idUser');
+    $query->execute(array('idUser' => $userId));
+  }
+
   public function validateUser(string $username) {
     $query = $this->connect->prepare('SELECT * FROM users WHERE username = :username');
     $query->execute(array(':username' => $username));

@@ -52,5 +52,19 @@ class Admin extends User {
     }
     return false;
   }
+
+  public function emailAdminValidation(string $emailAdmin) {
+    $query = $this->connect->prepare('SELECT email FROM admins WHERE email = :emailAdmin');
+    $query->execute(array(':emailAdmin' => $emailAdmin));
+    if ($query->rowCount() != 0) {
+      return true;
+    }
+    return false;
+  }
+
+  public function updateDataAdmin() {
+    $query = $this->connect->prepare('UPDATE admins SET email=:email WHERE id_admin = :idAdmin');
+    $query->execute(array('idAdmin' => $this->idAdmin));
+  }
 }
 ?>

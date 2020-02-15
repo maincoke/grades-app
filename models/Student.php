@@ -52,5 +52,19 @@ class Student extends User {
     }
     return false;
   }
+
+  public function emailStudentValidation(string $emailStudent) {
+    $query = $this->connect->prepare('SELECT email FROM students WHERE email = :emailStudent');
+    $query->execute(array(':emailStudent' => $emailStudent));
+    if ($query->rowCount() != 0) {
+      return true;
+    }
+    return false;
+  }
+
+  public function updateDataStudent() {
+    $query = $this->connect->prepare('UPDATE students SET email=:email WHERE id_student = :idStudent');
+    $query->execute(array('idStudent' => $this->idStudent));
+  }
 }
 ?>

@@ -2,7 +2,7 @@
 /**
  *  Página Principal del Sitio de Gestion Academica *
  */
-
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -24,10 +24,14 @@
   </div>
   <div id="mainTabs" class="">
     <ul>
-      <li><a href="tabAdmins.php">Administradores</a></li>
-      <li><a href="tabTeachers.php">Docentes</a></li>
-      <li><a href="tabStudents.php">Estudiantes</a></li>
-      <li><a href="tabSubjects.php">Materias</a></li>
+      <?php if ($_SESSION['PROFILE'] == "Administrador") { ?>
+        <li><a href="tabAdmins.php" id="adminstab">Administradores</a></li>
+      <?php } ?>
+      <?php if ($_SESSION['PROFILE'] == "Docente" || $_SESSION['PROFILE'] == "Administrador") { ?>
+        <li><a href="tabTeachers.php" id="teacherstab">Docentes</a></li>
+      <?php } ?>
+      <li><a href="tabStudents.php" id="studentstab">Estudiantes</a></li>
+      <li><a href="tabSubjects.php" id="subjectstab">Materias</a></li>
     </ul>
   </div>
   <script src="../styles/external/jquery/jquery.js" type="text/javascript"></script>

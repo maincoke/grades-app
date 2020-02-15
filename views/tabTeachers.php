@@ -4,27 +4,6 @@
  */
 
 ?>
-<div id="modal-manage-teacher" title="Registrar nuevo Docente">
-  <p class="font-italic">Todos los campos son requeridos.</p>
-  <form action="../controlers/teacherAdd.php" method="POST" id="teacherForm">
-    <fieldset class="modal-fieldset">
-      <input type="hidden" name="idteacher" id="idteacher" value="">
-      <label for="name">Nombre(s)</label>
-      <input type="text" name="name" id="name" value="" placeholder="Primer y segundo nombre..." class="ui-corner-all" required>
-      <label for="lastname">Apellido(s)</label>
-      <input type="text" name="lastname" id="lastname" value="" placeholder="Primer y segundo apellido..." class="ui-corner-all" required>
-      <label for="usermail">Correo Electrónico</label>
-      <input type="email" name="usermail" id="usermail" value="" placeholder="nombrecorreo@dominio.com..." class="ui-corner-all" required>
-      <label for="username">Usuario</label>
-      <input type="text" name="username" id="username" value="" placeholder="nombreUsuario..." class="ui-corner-all" required>
-      <label for="userpass">Contraseña</label>
-      <input type="password" name="userpass" id="userpass" value="" placeholder="Debe contener 8 caracteres..." class="ui-corner-all" required>
-      <label for="userpass">Confirmar contraseña</label>
-      <input type="password" name="confirm" id="confirm" value="" placeholder="Debe coincidir con la anterior..." class="ui-corner-all" required>
-    </fieldset>
-    <button type="submit" id="teacheradd" class="button button-add">Registrar</button>
-  </form>
-</div>
 <div class="container-scroll">
   <button type="button" id="addteacher" class="button button-send modal-action-teacher">Registrar</button>
   <table>
@@ -63,6 +42,27 @@
       </td>
     </tr>
   </table>
+</div>
+<div id="modal-manage-teacher" title="Registrar nuevo Docente">
+  <p class="font-italic">Todos los campos son requeridos.</p>
+  <form action="../controlers/teacherAdd.php" method="POST" id="teacherForm">
+    <fieldset class="modal-fieldset">
+      <input type="hidden" name="idteacher" id="idteacher" value="">
+      <label for="name">Nombre(s)</label>
+      <input type="text" name="name" id="name" value="" placeholder="Primer y segundo nombre..." class="ui-corner-all" required>
+      <label for="lastname">Apellido(s)</label>
+      <input type="text" name="lastname" id="lastname" value="" placeholder="Primer y segundo apellido..." class="ui-corner-all" required>
+      <label for="usermail">Correo Electrónico</label>
+      <input type="email" name="usermail" id="usermail" value="" placeholder="nombrecorreo@dominio.com..." class="ui-corner-all" required>
+      <label for="username">Usuario</label>
+      <input type="text" name="username" id="username" value="" placeholder="nombreUsuario..." class="ui-corner-all" required>
+      <label for="userpass">Contraseña</label>
+      <input type="password" name="userpass" id="userpass" value="" placeholder="Debe contener 8 caracteres..." class="ui-corner-all" required>
+      <label for="userpass">Confirmar contraseña</label>
+      <input type="password" name="confirm" id="confirm" value="" placeholder="Debe coincidir con la anterior..." class="ui-corner-all" required>
+    </fieldset>
+    <button type="submit" id="teacheradd" class="button button-add">Registrar</button>
+  </form>
 </div>
 <script type="text/javascript">
 $(".manageUser").controlgroup();

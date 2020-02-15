@@ -3,7 +3,6 @@
  *  Clase USer para el Sitio de Gestión Academica /* * *
  */
 require_once('../models/Connection.php');
-session_start();
 
 class User extends Connection {
 
@@ -29,9 +28,11 @@ class User extends Connection {
   }
 
   public function saveData() {
-    $query = $this->connect->prepare('INSERT INTO users VALUES (:name, :lastname, :username, :pword, :profile, :state)');
-    return $query->execute(array(':name' => $this->name, ':lastname' => $this->lastname, ':username' => $this->username, ':pword' => $this->password,
+    $query = $this->connect->prepare('INSERT INTO users (name, lastname, username, password, profile, state) '.
+                                    'VALUES (:name, :lastname, :username, :pword, :profile, :state)');
+    $query->execute(array(':name' => $this->name, ':lastname' => $this->lastname, ':username' => $this->username, ':pword' => $this->password,
                           ':profile' => $this->profile, ':state' => $this->state));
+    return $this->connect->lastInsertId();
   }
 
   public function getData(string $property) {
@@ -61,6 +62,7 @@ class User extends Connection {
     $query->execute(array(':username' => $username, ':userpass' => $userpass));
     if ($query->rowCount() != 0) {
       $result = $query->fetch();
+      session_start();
       $_SESSION['USERNAME'] = $result['username'];
       $_SESSION['ID'] = $result['id_user'];
       $_SESSION['PROFILE'] = $result['profile'];

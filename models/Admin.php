@@ -45,7 +45,7 @@ class Admin extends User {
 
   public function fetchAllAdmins() {
     $query = $this->connect->prepare('SELECT * FROM users AS u INNER JOIN admins AS a ON u.id_user = a.id_admin'.
-                                     ' WHERE u.profile = "Administrador" AND u.state = "Activo"');
+                                     ' WHERE u.profile = "Administrador"'); // AND u.state = "Activo"
     $query->execute();
     if ($query->rowCount() != 0) {
       return $query->fetchAll();
@@ -64,7 +64,7 @@ class Admin extends User {
 
   public function updateDataAdmin() {
     $query = $this->connect->prepare('UPDATE admins SET email=:email WHERE id_admin = :idAdmin');
-    $query->execute(array('idAdmin' => $this->idAdmin));
+    $query->execute(array('idAdmin'=> $this->idAdmin, ':email'=> $this->email));
   }
 }
 ?>

@@ -31,7 +31,7 @@ class User extends Connection {
     $query = $this->connect->prepare('INSERT INTO users (name, lastname, username, password, profile, state) '.
                                     'VALUES (:name, :lastname, :username, :pword, :profile, :state)');
     $query->execute(array(':name' => $this->name, ':lastname' => $this->lastname, ':username' => $this->username, ':pword' => $this->password,
-                          ':profile' => $this->profile, ':state' => $this->state));
+                          ':profile'=> $this->profile, ':state'=> $this->state));
     return $this->connect->lastInsertId();
   }
 
@@ -41,7 +41,7 @@ class User extends Connection {
 
   public function fetchData(int $idUser) {
     $query = $this->connect->prepare('SELECT * FROM users WHERE id_user = :idUser');
-    $query->execute(array('idUser' => $idUser));
+    $query->execute(array('idUser'=> $idUser));
     if ($query->rowCount() != 0) {
       return $query->fetch();
     }
@@ -49,13 +49,21 @@ class User extends Connection {
   }
 
   public function updateData(int $userId) {
-    $query = $this->connect->prepare('UPDATE users SET name=:name, lastname=:lastname  WHERE id_user = :idUser');
-    $query->execute(array('idUser' => $userId));
+    $query = $this->connect->prepare('UPDATE users SET name=:name, lastname=:lastname, password=:pword WHERE id_user = :idUser');
+    $query->execute(array(':idUser'=> $userId, ':name'=> $this->name, ':lastname'=> $this->lastname, ':pword'=> $this->password));
+  }
+
+  public function switchStateUser(int $userId) {
+    $queryFind = $this->connect->prepare('SELECT state FROM users WHERE id_user = :idUser');
+    $queryFind->execute(array(':idUser'=> $userId));
+    $stateUser = $queryFind->fetch()['state'] === 'Activo' ? 'Inactivo' : 'Activo';
+    $queryUpdate = $this->connect->prepare('UPDATE users SET state=:newState WHERE id_user = :idUser');
+    $queryUpdate->execute(array(':idUser'=> $userId, ':newState'=> $stateUser));
   }
 
   public function validateUser(string $username) {
     $query = $this->connect->prepare('SELECT * FROM users WHERE username = :username');
-    $query->execute(array(':username' => $username));
+    $query->execute(array(':username'=> $username));
     if ($query->rowCount() != 0) {
       return true;
     }
@@ -64,7 +72,7 @@ class User extends Connection {
 
   public function checkLogin(string $username, string $userpass) {
     $query = $this->connect->prepare('SELECT * FROM users WHERE username = :username AND password = :userpass');
-    $query->execute(array(':username' => $username, ':userpass' => $userpass));
+    $query->execute(array(':username'=> $username, ':userpass'=> $userpass));
     if ($query->rowCount() != 0) {
       $result = $query->fetch();
       session_start();

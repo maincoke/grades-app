@@ -45,7 +45,7 @@ class Student extends User {
 
   public function fetchAllStudents() {
     $query = $this->connect->prepare('SELECT * FROM users AS u INNER JOIN students AS a ON u.id_user = a.id_student'.
-                                     ' WHERE u.profile = "Estudiante" AND u.state = "Activo"');
+                                     ' WHERE u.profile = "Estudiante"'); //  AND u.state = "Activo"
     $query->execute();
     if ($query->rowCount() != 0) {
       return $query->fetchAll();

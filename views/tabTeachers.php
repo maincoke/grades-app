@@ -34,7 +34,7 @@ if (isset($_SESSION) && ($_SESSION['PROFILE'] == "Administrador" || $_SESSION['P
           <td>
             <div class="manageUser">
               <button type="button" class="action-teacher" value=<?php echo $data['id_user'] ?>>Editar</button>
-              <button type="button" class="" value="<?php echo $data['id_teacher'] ?>">Desactivar</button>
+              <button type="button" class="active-teacher" value=<?php echo $data['id_teacher'] ?>><?php echo $data['state'] === "Activo" ? 'Desactivar' : 'Activar'; ?></button>
             </div>
           </td>
         </tr>
@@ -66,6 +66,14 @@ if (isset($_SESSION) && ($_SESSION['PROFILE'] == "Administrador" || $_SESSION['P
     </fieldset>
     <button type="submit" id="manageteacher" class="button button-manage">Registrar</button>
   </form>
+</div>
+<div id="modal-active-teacher" title="Desactivar Docente">
+  <input type="hidden" name="teacherId" id="teacherId" value="">
+  <p>
+    <span class="ui-icon" style="float:left; margin:12px 12px 20px 0;" id="activeIcon"></span>
+    Este usuario Docente: <span id="teacherName"></span> será <span id="teacherState"></span>.!!
+  </p>
+  <p>¿Está usted seguro?</p>
 </div>
 <script type="text/javascript">
 $(".manageUser").controlgroup();
@@ -127,5 +135,61 @@ $('#teacherForm').submit(function(event) {
                   .test($('#usermailTch').val());
   var validPword = $('#userpassTch').val() == $('#confirmTch').val() ? true : false;
   return validPword && validEmail;
+});
+
+$("#modal-active-teacher").dialog({
+  resizable: false,
+  autoOpen: false,
+  width: 400,
+  modal: true,
+  height: "auto",
+  buttons: [{
+    text: "",
+    click: function(event) {
+      event.preventDefault();
+      var teacheridsw = parseInt($('#teacherId').val());
+      $.ajax({ url: '../controlers/teacherDisable.php',
+        method: 'POST',
+        dataType: 'json',
+        data: { 'id_teacher': teacheridsw },
+        success: function(data) {
+          if (data) {
+            alert("Se modificó el estado del usuario con éxito!!");
+            window.location = '../views/main.php';
+          }
+        },
+        error: function(err, txt, errt) { alert('Ha ocurrido un error..!!'); }
+      });
+    }
+  },{
+    text: "Cancelar",
+    click: function(event) { $(this).dialog("close"); }
+  }]
+});
+
+$(".active-teacher").click(function(event) {
+  event.preventDefault();
+  var teacherid = $(this).prop('value');
+  var teacherStateSw = $(this).html() == "Desactivar" ? "Activar": "Desactivar";
+  $.ajax({ url: '../controlers/getDataTeacher.php',
+    method: 'POST',
+    dataType: 'json',
+    data: { 'id_teacher': teacherid },
+    success: function(data) {
+      if (data) {
+        $('#modal-active-teacher').dialog('option', 'title', (teacherStateSw == "Activar" ? "Desactivar" : "Activar") + " Docente");
+        $('#teacherId').val(data[0].id_user);
+        $('#teacherName').text(data[0].name + " " + data[0].lastname);
+        $('#teacherState').text(teacherStateSw == "Activar" ? "desactivado" : "activado");
+        teacherStateSw == "Activar" ? $('#activeIcon').removeClass('ui-icon-circle-arrow-n').addClass('ui-icon-circle-arrow-s') :
+        $('#activeIcon').removeClass('ui-icon-circle-arrow-s').addClass('ui-icon-circle-arrow-n');
+        $('.ui-dialog > .ui-dialog-buttonpane > .ui-dialog-buttonset').children('.ui-button:nth-child(1)').text(teacherStateSw == "Activar" ? "Desactivar" : "Activar");
+      } else {
+        alert('No existe el registro! Intente de nuevo..!!');
+      }
+    },
+    error: function(err, txt, errt) { alert('Ha ocurrido un error..!!'); }
+  });
+  $("#modal-active-teacher").dialog("open");
 });
 </script>

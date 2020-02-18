@@ -22,7 +22,7 @@ session_start();
     <h2 class="ui-widget-header ui-corner-all" style="width:90%">Gestión Académica - Notas de Materias</h2>
     <a id="button-logout" class="ui-widget ui-button" style="width:10%;" href="../controlers/userLogout.php">Salir</a>
   </div>
-  <div id="mainTabs" class="">
+  <div id="mainTabs">
     <ul>
       <?php if ($_SESSION['PROFILE'] == "Administrador") { ?>
         <li><a href="tabAdmins.php" id="adminstab">Administradores</a></li>

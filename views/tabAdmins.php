@@ -34,7 +34,7 @@ if (isset($_SESSION) && $_SESSION['PROFILE'] == "Administrador") {
           <td>
             <div class="manageUser">
               <button type="button" class="action-admin" value=<?php echo $data['id_user'] ?>>Editar</button>
-              <button type="button" class="" value="<?php echo $data['id_admin'] ?>">Desactivar</button>
+              <button type="button" class="active-admin" value=<?php echo $data['id_admin'] ?>><?php echo $data['state'] === "Activo" ? 'Desactivar' : 'Activar'; ?></button>
             </div>
           </td>
         </tr>
@@ -67,9 +67,18 @@ if (isset($_SESSION) && $_SESSION['PROFILE'] == "Administrador") {
     <button type="submit" id="manageadmin" class="button button-manage">Registrar</button>
   </form>
 </div>
+<div id="modal-active-admin" title="Desactivar Administrador">
+  <input type="hidden" name="adminId" id="adminId" value="">
+  <p>
+    <span class="ui-icon" style="float:left; margin:12px 12px 20px 0;" id="activeIcon"></span>
+    Este usuario Administrador: <span id="adminName"></span> será <span id="adminState"></span>.!!
+  </p>
+  <p>¿Está usted seguro?</p>
+</div>
 <script type="text/javascript">
 $(".manageUser").controlgroup();
 $(".button").button();
+
 
 $("#modal-manage-admin").dialog({
 	autoOpen: false,
@@ -108,13 +117,9 @@ $(".action-admin").click(function(event)  {
           alert('No existe el registro! Intente de nuevo..!!');
         }
       },
-      error: function(err, txt, errt) {
-        console.log('Ha ocurrido un error..!!');
-      }
+      error: function(err, txt, errt) { alert('Ha ocurrido un error..!!'); }
     });
   } else {
-    $('#usernameAdm').prop('disabled', false);
-    $('#numdocAdm').prop('disabled', false);
     $('#adminForm').prop('action', '../controlers/adminAdd.php');
     $('#manageadmin').html('Registrar');
     $("#modal-manage-admin").dialog('option', 'title', 'Registrar nuevo Administrador');
@@ -123,9 +128,67 @@ $(".action-admin").click(function(event)  {
 });
 
 $('#adminForm').submit(function(event) {
+  $('#usernameAdm').prop('disabled', false);
+  $('#numdocAdm').prop('disabled', false);
   var validEmail = (/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/gi)
                   .test($('#usermailAdm').val());
   var validPword = $('#userpassAdm').val() == $('#confirmAdm').val() ? true : false;
   return validPword && validEmail;
+});
+
+$("#modal-active-admin").dialog({
+  resizable: false,
+  autoOpen: false,
+  width: 400,
+  modal: true,
+  height: "auto",
+  buttons: [{
+    text: "",
+    click: function(event) {
+      event.preventDefault();
+      var adminidsw = parseInt($('#adminId').val());
+      $.ajax({ url: '../controlers/adminDisable.php',
+        method: 'POST',
+        dataType: 'json',
+        data: { 'id_admin': adminidsw },
+        success: function(data) {
+          if (data) {
+            alert("Se modificó el estado del usuario con éxito!!");
+            window.location = '../views/main.php';
+          }
+        },
+        error: function(err, txt, errt) { alert('Ha ocurrido un error..!!'); }
+      });
+    }
+  },{
+    text: "Cancelar",
+    click: function(event) { $(this).dialog("close"); }
+  }]
+});
+
+$(".active-admin").click(function(event) {
+  event.preventDefault();
+  var adminid = $(this).prop('value');
+  var adminStateSw = $(this).html() == "Desactivar" ? "Activar": "Desactivar";
+  $.ajax({ url: '../controlers/getDataAdmin.php',
+    method: 'POST',
+    dataType: 'json',
+    data: { 'id_admin': adminid },
+    success: function(data) {
+      if (data) {
+        $('#modal-active-admin').dialog('option', 'title', (adminStateSw == "Activar" ? "Desactivar" : "Activar") + " Administrador");
+        $('#adminId').val(data[0].id_user);
+        $('#adminName').text(data[0].name + " " + data[0].lastname);
+        $('#adminState').text(adminStateSw == "Activar" ? "desactivado" : "activado");
+        adminStateSw == "Activar" ? $('#activeIcon').removeClass('ui-icon-circle-arrow-n').addClass('ui-icon-circle-arrow-s') :
+        $('#activeIcon').removeClass('ui-icon-circle-arrow-s').addClass('ui-icon-circle-arrow-n');
+        $('.ui-dialog > .ui-dialog-buttonpane > .ui-dialog-buttonset').children('.ui-button:nth-child(1)').text(adminStateSw == "Activar" ? "Desactivar" : "Activar");
+      } else {
+        alert('No existe el registro! Intente de nuevo..!!');
+      }
+    },
+    error: function(err, txt, errt) { alert('Ha ocurrido un error..!!'); }
+  });
+  $("#modal-active-admin").dialog("open");
 });
 </script>

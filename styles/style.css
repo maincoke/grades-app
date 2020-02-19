@@ -32,7 +32,7 @@ th, td {
   display: flex;
   flex-direction: column;
   max-width: 40%;
-  margin: 0 33%;
+  margin: 5% 33%;
 }
 
 #button-login, #button-logout {
@@ -41,6 +41,13 @@ th, td {
 
 #button-logout {
   width: 10% !important;
+}
+
+#message-error {
+  padding: 0 .7em;
+  text-align: center;
+  max-width: 40%;
+  margin: 10px 33.5%;
 }
 
 .title-content {
@@ -56,11 +63,11 @@ th, td {
   background-color: #494949;
 }
 
-.button-send, .button-add {
+.button-send, .button-manage {
   margin: 10px 5px;
 }
 
-.button-add {
+.button-manage {
   float: right;
 }
 

@@ -71,17 +71,21 @@ class User extends Connection {
   }
 
   public function checkLogin(string $username, string $userpass) {
-    $query = $this->connect->prepare('SELECT * FROM users WHERE username = :username AND password = :userpass AND state = "Activo"');
+    $query = $this->connect->prepare('SELECT * FROM users WHERE username = :username AND password = :userpass');
     $query->execute(array(':username'=> $username, ':userpass'=> $userpass));
     if ($query->rowCount() != 0) {
       $result = $query->fetch();
-      session_start();
-      $_SESSION['USERNAME'] = $result['username'];
-      $_SESSION['ID'] = $result['id_user'];
-      $_SESSION['PROFILE'] = $result['profile'];
-      return true;
+      if ($result['state'] === 'Activo') {
+        session_start();
+        $_SESSION['USERNAME'] = $result['username'];
+        $_SESSION['ID'] = $result['id_user'];
+        $_SESSION['PROFILE'] = $result['profile'];
+        return -1;
+      } else {
+        return 1;
+      }
     }
-    return false;
+    return 0;
   }
 
   public function getConnection() {

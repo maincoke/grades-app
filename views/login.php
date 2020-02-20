@@ -2,11 +2,6 @@
 /**
  *  Página de Inicio de Sesión en Sitio de Gestion Academica *
  */
-if (isset($_GET['login'])) {
-  $loginError = boolval($_GET['login']);
-} else {
-  $loginError = true;
-}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -20,8 +15,16 @@ if (isset($_GET['login'])) {
   <link href="../styles/jquery-ui.theme.min.css" rel="stylesheet">
   <link href="../styles/jquery-ui.structure.min.css" rel="stylesheet">
   <link href="../styles/style.css" rel="stylesheet" type="text/css">
+  <script src="../styles/external/jquery/jquery.js" type="text/javascript"></script>
+  <script src="../styles/jquery-ui.js" type="text/javascript"></script>
 </head>
 <body>
+<?php
+if (isset($_GET['login'])) {
+  $loginError = boolval($_GET['login']);
+  echo '<script>$("#message-error").show().fadeOut(2500);</script>';
+}
+?>
   <div>
     <form method="POST" action="../controlers/userLogin.php" id="loginForm">
       <h2 class="ui-widget-header ui-corner-all">Gestión Académica - Inicio de Sesión</h2>
@@ -37,24 +40,29 @@ if (isset($_GET['login'])) {
   <div class="ui-state-error ui-corner-all" id="message-error">
     <p>
       <span class="ui-icon ui-icon-alert" style="margin-right: .3em;"></span>
-      <?php if ($loginError) { ?>
+      <?php if (isset($loginError) && $loginError == 0) { ?>
         <strong>Error en las credenciales de usuario al ingresar..!!</strong>
+      <?php } else if (isset($loginError) && $loginError == 1) { ?>
+        <strong>La cuenta se encuentra Inactiva..!!</strong><br><strong>Comuniquese con un Administrador.</strong>
       <?php } else { ?>
         <strong>Las credenciales de usuario no son válidas..!!</strong>
       <?php } ?>
     </p>
   </div>
-  <script src="../styles/external/jquery/jquery.js" type="text/javascript"></script>
-  <script src="../styles/jquery-ui.js" type="text/javascript"></script>
   <script>
-    $("#message-error").hide();
+    if (urlParam('login') == null) {
+      $("#message-error").hide();
+    }
     $("#button-login").button().click(function(event) {
       if ($("#username").val() != "" && $("#userpass").val() != "") {
         $("#loginForm").submit();
-      } else {
-        $("#message-error").show().fadeOut(2500);
-      }
+      } 
+      $("#message-error").show().fadeOut(2500);
     });
+    function urlParam(name) {
+      var urlParse = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+      return urlParse == null ? null : urlParse[1] || 0;
+    }
   </script>
 </body>
 </html>

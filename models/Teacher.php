@@ -44,8 +44,8 @@ class Teacher extends User {
   }
 
   public function fetchAllTeachers() {
-    $query = $this->connect->prepare('SELECT * FROM users AS u INNER JOIN teachers AS a ON u.id_user = a.id_teacher'.
-                                     ' WHERE u.profile = "Docente"'); //  AND u.state = "Activo"
+    $query = $this->connect->prepare('SELECT * FROM users AS u INNER JOIN teachers AS a ON u.id_user = a.id_teacher '.
+                                     'WHERE u.profile = "Docente"');
     $query->execute();
     if ($query->rowCount() != 0) {
       return $query->fetchAll();

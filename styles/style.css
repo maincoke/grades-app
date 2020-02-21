@@ -28,6 +28,10 @@ th, td {
   padding: 0 0.5vw;
 }
 
+tr {
+  height: 30px;
+}
+
 .box-login {
   display: flex;
   flex-direction: column;
@@ -90,4 +94,8 @@ th, td {
   font-style: italic;
   color: #fff56e;
   font-weight: bolder;
+}
+
+.fail-grade-font {
+  color: #f87878
 }

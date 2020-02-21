@@ -68,8 +68,9 @@ class Student extends User {
   }
 
   public function fetchGradesStudent(int $studentId) {
-    $query = $this->connect->prepare('SELECT st.name, st.lastname, sb.subjectmatter, gr.average, th.name, th.lastname '.
-                                     'FROM grades AS gr INNER JOIN users AS st ON gr.fk_student = st.id_user '.
+    $query = $this->connect->prepare('SELECT st.name AS namestd , st.lastname AS lnamestd, sb.subjectmatter AS sbjname, gr.average AS grade, '.
+                                     'th.name AS nametch, th.lastname AS lnametch FROM grades AS gr '.
+                                     'INNER JOIN users AS st ON gr.fk_student = st.id_user '.
                                      'INNER JOIN subjects AS sb ON sb.id_subject = gr.fk_subject '.
                                      'INNER JOIN users AS th ON gr.fk_teacher = th.id_user WHERE st.id_user = :studentId');
     $query->execute(array(':studentId' => $studentId));
@@ -77,6 +78,26 @@ class Student extends User {
       return $query->fetchAll();
     }
     return false;
+  }
+
+  public function fetchOneGradeStd(int $studentId, int $subjectId, int $teacherId) {
+    $query = $this->connect->prepare('SELECT id_grade, average FROM grades WHERE fk_student = :studentId AND fk_subject = :subjectId AND fk_teacher = :teacherId');
+    $query->execute(array(':studentId'=> $studentId, ':subjectId'=> $subjectId, ':teacherId'=> $teacherId));
+    if ($query->rowCount() != 0) {
+      return $query->fetch();
+    }
+    return false;
+  }
+
+  public function addStudentGrade(String $gradeId, int $studentId, int $subjectId, int $teacherId, int $grade) {
+    $query = $this->connect->prepare('INSERT INTO grades (id_grade, fk_student, fk_subject, fk_teacher, average) '.
+                                     'VALUES (:gradeId, :studentId, :subjectId, :teacherId, :grade)');
+    $query->execute(array(':gradeId'=> $gradeId, ':studentId'=> $studentId, ':subjectId'=> $subjectId, ':teacherId'=> $teacherId, ':grade'=> $grade));
+  }
+
+  public function updateSubjectStd(String $gradeId, String $gradeIdNew, int $grade) {
+    $query = $this->connect->prepare('UPDATE grades SET id_grade = :gradeIdNew, average = :grade WHERE id_grade = :gradeId');
+    $query->execute(array(':gradeId'=> $gradeId, ':gradeIdNew'=> $gradeIdNew, ':grade'=> $grade));
   }
 }
 ?>

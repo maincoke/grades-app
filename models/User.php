@@ -1,6 +1,6 @@
 <?php
 /**
- *  Clase USer para el Sitio de Gestión Academica /* * *
+ *  Clase User para el Sitio de Gestión Academica /* * *
  */
 require_once('../models/Connection.php');
 

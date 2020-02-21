@@ -80,6 +80,7 @@ $(".manageUser").controlgroup();
 $(".button").button();
 
 $("#modal-manage-teacher").dialog({
+  resizable: false,
 	autoOpen: false,
 	width: 500,
 	modal: true,

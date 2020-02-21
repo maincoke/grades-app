@@ -3,9 +3,13 @@
  *  Pestaña Estudiantes del Sitio de Gestion Academica *
  */
 require_once('../models/Student.php');
+require_once('../models/Subject.php');
+require_once('../models/Teacher.php');
 session_start();
 if (isset($_SESSION) && ($_SESSION['PROFILE'] == "Administrador" || $_SESSION['PROFILE'] == "Docente") || $_SESSION['PROFILE'] == "Estudiante") {
   $student = new Student();
+  $subjects = new Subject();
+  $teachers = new Teacher();
   $dataStudent = $student->fetchStudentData($_SESSION['ID']);
 }
 ?>
@@ -71,7 +75,9 @@ if (isset($_SESSION) && ($_SESSION['PROFILE'] == "Administrador" || $_SESSION['P
       <input type="password" name="confirmStd" id="confirmStd" value="" placeholder="Debe coincidir con la anterior..." class="ui-corner-all" required>
     </fieldset>
     <button type="submit" id="managestudent" class="button button-manage">Registrar</button>
-    <button type="button" id="editsubjects" class="button button-send modal-action-subject">Gestionar Materias</button>
+    <button type="button" id="editsubjects" class="button button-send modal-action-subject">
+      <?php echo $_SESSION['PROFILE'] != 'Estudiante' ? 'Gestionar' : 'Consultar'; ?> Materias
+    </button>
   </form>
 </div>
 <div id="modal-active-student" title="Desactivar Estudiante">
@@ -82,8 +88,10 @@ if (isset($_SESSION) && ($_SESSION['PROFILE'] == "Administrador" || $_SESSION['P
   </p>
   <p>¿Está usted seguro?</p>
 </div>
-<div id="modal-subjects" title="Gestionar Materias">
+<div id="modal-subjects" title="<?php echo $_SESSION['PROFILE'] != 'Estudiante' ? 'Gestionar' : 'Consultar'; ?> Materias">
+<?php if ($_SESSION['PROFILE'] != 'Estudiante') { ?>
   <p id="messageSubject" class="font-italic">Actualización de Materias del Estudiante.</p>
+<?php } ?>
   <form action="../controlers/studentEditSubject.php" method="POST" id="subjectForm">
     <input type="hidden" name="idStudent" id="idStudent" value="">
     <table>
@@ -92,41 +100,46 @@ if (isset($_SESSION) && ($_SESSION['PROFILE'] == "Administrador" || $_SESSION['P
         <th>Nota</th>
         <th>Docente</th>
       </tr>
+    <?php if ($_SESSION['PROFILE'] != 'Estudiante') {
+      $allSubjects = $subjects->fetchAllSubjects();
+      $allTeachers = $teachers->fetchAllTeachers();
+    ?>
       <tr>
         <td>
           <select name="subject" id="subject" class="ui-corner-all" style="width: 200px;">
             <option value="">Seleccionar...</option>
-            <option value="1">Matematicas</option>
-            <option value="2">Ciencias</option>
-            <option value="3">Fisica</option>
-            <option value="4">Quimica</option>
-            <option value="5">ingles</option>
+          <?php foreach($allSubjects as $subject) { ?>
+            <option value="<?php echo $subject['id_subject'] ?>"><?php echo $subject['subjectmatter'] ?></option>
+          <?php } ?>
           </select>
         </td>
         <td><input type="number" name="grade" id="grade" value="10" class="ui-corner-all" style="width: 50px;"></td>
         <td>
           <select name="teachers" id="teachers" class="ui-corner-all" style="width: 200px;">
             <option value="">Seleccionar...</option>
-            <option value="1">Marcela Castillo</option>
-            <option value="2">Juan Berrizbetia</option>
-            <option value="3">Francisco Alarcon</option>
-            <option value="4">Pablo Quiroga</option>
-            <option value="5">Vicente Angulo</option>
+          <?php foreach($allTeachers as $teacher) { 
+            $teacherShortName = substr($teacher['name'], 0, strpos($teacher['name'], " ")).' '.substr($teacher['lastname'], 0, strpos($teacher['lastname'], " "));
+          ?>
+            <option value="<?php echo $teacher['id_teacher'] ?>"><?php echo $teacherShortName; ?></option>
+          <?php } ?>
           </select>
         </td>
       </tr>
+    <?php } //** -------------------------------------------------------------------------------------------------------------------- */
+      $studentGrades = $_SESSION['PROFILE'] != 'Estudiante' ? $dataStudent : $student->fetchGradesStudent($_SESSION['ID']); //***** */
+      foreach ($studentGrades as $gradeStd) {
+        $teacherShortName = substr($gradeStd['nametch'], 0, strpos($gradeStd['nametch'], " ")).' '.substr($gradeStd['lnametch'], 0, strpos($gradeStd['lnametch'], " "));
+    ?>
       <tr>
-        <td>Fisica</td>
-        <td>75%</td>
-        <td>Juan Berrizbetia</td>
+        <td><?php echo $gradeStd['sbjname'] ?></td>
+        <td class=<?php echo $gradeStd['grade'] < 49 ? "fail-grade-font" : ""; ?>><?php echo $gradeStd['grade'] ?>%</td>
+        <td><?php echo $teacherShortName ?></td>
       </tr>
-      <tr>
-        <td>Quimica</td>
-        <td>85%</td>
-        <td>Pablo Quiroga</td>
-      </tr>
+    <?php } ?>
     </table>
+  <?php if ($_SESSION['PROFILE'] != 'Estudiante') { ?>
     <button type="submit" id="subjectsUpdate" class="button button-manage">Actualizar</button>
+  <?php } ?>
   </form>
 </div>
 <script type="text/javascript">
@@ -134,6 +147,7 @@ $(".manageUser").controlgroup();
 $(".button").button();
 
 $("#modal-manage-student").dialog({
+  resizable: false,
 	autoOpen: false,
 	width: 500,
 	modal: true,
@@ -246,9 +260,9 @@ $(".active-student").click(function(event) {
   });
   $("#modal-active-student").dialog("open");
 });
-  //********************************************************************************************************************** */
 
 $("#modal-subjects").dialog({
+  resizable: false,
   autoOpen: false,
   width: 560,
   maxHeight: 400,
@@ -262,7 +276,7 @@ $("#modal-subjects").dialog({
 $(".modal-action-subject").click(function(event)  {
 	event.preventDefault();
   $('p#messageSubject.font-italic').show();
+  $('#idStudent').prop('value', $('#idstudent').prop('value'));
 	$("#modal-subjects").dialog("open");
 });
-
 </script>

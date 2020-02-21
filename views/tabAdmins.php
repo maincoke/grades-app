@@ -81,6 +81,7 @@ $(".button").button();
 
 
 $("#modal-manage-admin").dialog({
+  resizable: false,
 	autoOpen: false,
 	width: 500,
 	modal: true,

@@ -96,6 +96,16 @@ tr {
   font-weight: bolder;
 }
 
+.row-grades {
+  height: 15px;
+}
+
 .fail-grade-font {
-  color: #f87878
+  color: #f87878;
+  text-align: right;
+}
+
+.good-grade-font {
+  color: #77e699;
+  text-align: right;
 }

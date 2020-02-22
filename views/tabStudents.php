@@ -75,7 +75,7 @@ if (isset($_SESSION) && ($_SESSION['PROFILE'] == "Administrador" || $_SESSION['P
       <input type="password" name="confirmStd" id="confirmStd" value="" placeholder="Debe coincidir con la anterior..." class="ui-corner-all" required>
     </fieldset>
     <button type="submit" id="managestudent" class="button button-manage">Registrar</button>
-    <button type="button" id="editsubjects" class="button button-send modal-action-subject">
+    <button type="button" id="editsubjects" class="button button-send action-subject">
       <?php echo $_SESSION['PROFILE'] != 'Estudiante' ? 'Gestionar' : 'Consultar'; ?> Materias
     </button>
   </form>
@@ -94,8 +94,9 @@ if (isset($_SESSION) && ($_SESSION['PROFILE'] == "Administrador" || $_SESSION['P
 <?php } ?>
   <form action="../controlers/studentEditSubject.php" method="POST" id="subjectForm">
     <input type="hidden" name="idStudent" id="idStudent" value="">
+    <input type="hidden" name="stdUsername" id="stdUsername" value="">
     <table>
-      <tr>
+      <tr id="subjects-header">
         <th>Materia</th>
         <th>Nota</th>
         <th>Docente</th>
@@ -113,9 +114,9 @@ if (isset($_SESSION) && ($_SESSION['PROFILE'] == "Administrador" || $_SESSION['P
           <?php } ?>
           </select>
         </td>
-        <td><input type="number" name="grade" id="grade" value="10" class="ui-corner-all" style="width: 50px;"></td>
+        <td><input type="number" name="grade" id="grade" value="10" min="5" max="100" class="ui-corner-all" style="width: 50px;"></td>
         <td>
-          <select name="teachers" id="teachers" class="ui-corner-all" style="width: 200px;">
+          <select name="teacher" id="teacher" class="ui-corner-all" style="width: 200px;">
             <option value="">Seleccionar...</option>
           <?php foreach($allTeachers as $teacher) { 
             $teacherShortName = substr($teacher['name'], 0, strpos($teacher['name'], " ")).' '.substr($teacher['lastname'], 0, strpos($teacher['lastname'], " "));
@@ -124,16 +125,6 @@ if (isset($_SESSION) && ($_SESSION['PROFILE'] == "Administrador" || $_SESSION['P
           <?php } ?>
           </select>
         </td>
-      </tr>
-    <?php } //** -------------------------------------------------------------------------------------------------------------------- */
-      $studentGrades = $_SESSION['PROFILE'] != 'Estudiante' ? $dataStudent : $student->fetchGradesStudent($_SESSION['ID']); //***** */
-      foreach ($studentGrades as $gradeStd) {
-        $teacherShortName = substr($gradeStd['nametch'], 0, strpos($gradeStd['nametch'], " ")).' '.substr($gradeStd['lnametch'], 0, strpos($gradeStd['lnametch'], " "));
-    ?>
-      <tr>
-        <td><?php echo $gradeStd['sbjname'] ?></td>
-        <td class=<?php echo $gradeStd['grade'] < 49 ? "fail-grade-font" : ""; ?>><?php echo $gradeStd['grade'] ?>%</td>
-        <td><?php echo $teacherShortName ?></td>
       </tr>
     <?php } ?>
     </table>
@@ -164,6 +155,7 @@ $(".action-student").click(function(event)  {
     $('p.font-italic').hide();
     $('#studentForm').prop('action', '../controlers/studentEdit.php')
     $('#managestudent').html('Editar');
+    $('#editsubjects').show();
     $("#modal-manage-student").dialog('option', 'title', 'Editar Estudiante');
     var studentid = $(this).prop('value');
     $.ajax({ url: '../controlers/getDatastudent.php',
@@ -193,6 +185,7 @@ $(".action-student").click(function(event)  {
     $('#numdocStd').prop('disabled', false);
     $('#studentForm').prop('action', '../controlers/studentAdd.php');
     $('#managestudent').html('Registrar');
+    $('#editsubjects').hide();
     $("#modal-manage-student").dialog('option', 'title', 'Registrar nuevo Estudiante');
   }
 	$("#modal-manage-student").dialog("open");
@@ -270,13 +263,40 @@ $("#modal-subjects").dialog({
 	close: function(event) {
 		event.preventDefault();
 		$('#subjectForm')[0].reset();
+    $('.row-grades').remove();
+    $('div.fail-grade-font').remove();
 	}
 });
 
-$(".modal-action-subject").click(function(event)  {
+$(".action-subject").click(function(event)  {
 	event.preventDefault();
   $('p#messageSubject.font-italic').show();
   $('#idStudent').prop('value', $('#idstudent').prop('value'));
+  $('#stdUsername').prop('value', $('#usernameStd').prop('value'));
+  var idStd = $('#idStudent').val();
+  $.ajax({ url: '../controlers/getGradesStd.php',
+    method: 'POST',
+    dataType: 'json',
+    data: { 'id_student': idStd },
+    success: function(data) {
+      if (data) {
+        var tdSubject, tdGrade, tdTeacher;
+        $.each(data, function(idx, value) {
+          tdSubject = $('<td>' + value.sbjname + '</td>');
+          tdGrade = $('<td>' + value.grade + '%</td>');
+          tdTeacher = $('<td>' + value.nametch + ' ' + value.lnametch + '</td>');
+          tdGrade.addClass((parseInt(value.grade) < 49 ? "fail" : "good") + "-grade-font");
+          trInfo = $('<tr></tr>');
+          trInfo.addClass('row-grades').insertAfter('#subjects-header');
+          trInfo.append(tdSubject).append(tdGrade).append(tdTeacher);
+        });
+      } else {
+        var trNogrades = $('<div><p>Este estudiante no posee notas registradas aún..!!</p></div>');
+        trNogrades.addClass('fail-grade-font').insertAfter('#subjectForm > table');
+      }
+    },
+    error: function(err, txt, errt) { alert('Ha ocurrido un error..!!'); }
+  });
 	$("#modal-subjects").dialog("open");
 });
 </script>

@@ -75,7 +75,7 @@ class Student extends User {
                                      'INNER JOIN users AS th ON gr.fk_teacher = th.id_user WHERE st.id_user = :studentId');
     $query->execute(array(':studentId' => $studentId));
     if ($query->rowCount() != 0) {
-      return $query->fetchAll();
+      return $query->fetchAll(PDO::FETCH_ASSOC);
     }
     return false;
   }
@@ -84,7 +84,7 @@ class Student extends User {
     $query = $this->connect->prepare('SELECT id_grade, average FROM grades WHERE fk_student = :studentId AND fk_subject = :subjectId AND fk_teacher = :teacherId');
     $query->execute(array(':studentId'=> $studentId, ':subjectId'=> $subjectId, ':teacherId'=> $teacherId));
     if ($query->rowCount() != 0) {
-      return $query->fetch();
+      return $query->fetch(PDO::FETCH_ASSOC);
     }
     return false;
   }

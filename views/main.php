@@ -31,7 +31,9 @@ session_start();
         <li><a href="tabTeachers.php" id="teacherstab">Docentes</a></li>
       <?php } ?>
       <li><a href="tabStudents.php" id="studentstab">Estudiantes</a></li>
-      <li><a href="tabSubjects.php" id="subjectstab">Materias</a></li>
+      <?php if ($_SESSION['PROFILE'] == "Docente" || $_SESSION['PROFILE'] == "Administrador") { ?>
+        <li><a href="tabSubjects.php" id="subjectstab">Materias</a></li>
+      <?php } ?>
     </ul>
   </div>
   <script src="../styles/external/jquery/jquery.js" type="text/javascript"></script>

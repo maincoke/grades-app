@@ -38,7 +38,7 @@ class Teacher extends User {
     $query = $this->connect->prepare('SELECT * FROM users AS u INNER JOIN teachers AS a ON u.id_user = a.id_teacher WHERE u.id_user = :idTeacher');
     $query->execute(array('idTeacher' => $idTeacher));
     if ($query->rowCount() != 0) {
-      return $query->fetchAll();
+      return $query->fetch(PDO::FETCH_ASSOC);
     }
     return false;
   }
@@ -48,7 +48,7 @@ class Teacher extends User {
                                      'WHERE u.profile = "Docente"');
     $query->execute();
     if ($query->rowCount() != 0) {
-      return $query->fetchAll();
+      return $query->fetchAll(PDO::FETCH_ASSOC);
     }
     return false;
   }

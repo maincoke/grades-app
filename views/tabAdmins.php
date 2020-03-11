@@ -106,14 +106,14 @@ $(".action-admin").click(function(event)  {
       data: { 'id_admin': adminid },
       success: function(data) {
         if (data) {
-          $('#idadmin').val(data[0].id_admin);
-          $('#nameAdm').val(data[0].name);
-          $('#lastnameAdm').val(data[0].lastname);
-          $('#numdocAdm').val(data[0].document).prop('disabled', true);
-          $('#usermailAdm').val(data[0].email);
-          $('#usernameAdm').val(data[0].username).prop('disabled', true);
-          $('#userpassAdm').val(data[0].password);
-          $('#confirmAdm').val(data[0].password);
+          $('#idadmin').val(data.id_admin);
+          $('#nameAdm').val(data.name);
+          $('#lastnameAdm').val(data.lastname);
+          $('#numdocAdm').val(data.document).prop('disabled', true);
+          $('#usermailAdm').val(data.email);
+          $('#usernameAdm').val(data.username).prop('disabled', true);
+          $('#userpassAdm').val(data.password);
+          $('#confirmAdm').val(data.password);
         } else {
           alert('No existe el registro! Intente de nuevo..!!');
         }
@@ -178,8 +178,8 @@ $(".active-admin").click(function(event) {
     success: function(data) {
       if (data) {
         $('#modal-active-admin').dialog('option', 'title', (adminStateSw == "Activar" ? "Desactivar" : "Activar") + " Administrador");
-        $('#adminId').val(data[0].id_user);
-        $('#adminName').text(data[0].name + " " + data[0].lastname);
+        $('#adminId').val(data.id_user);
+        $('#adminName').text(data.name + " " + data.lastname);
         $('#adminState').text(adminStateSw == "Activar" ? "desactivado" : "activado");
         adminStateSw == "Activar" ? $('#activeIcon').removeClass('ui-icon-circle-arrow-n').addClass('ui-icon-circle-arrow-s') :
         $('#activeIcon').removeClass('ui-icon-circle-arrow-s').addClass('ui-icon-circle-arrow-n');

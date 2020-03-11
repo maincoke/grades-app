@@ -3,6 +3,7 @@
  *  Clase User para el Sitio de Gestión Academica /* * *
  */
 require_once('../models/Connection.php');
+require_once('../config-app.php');
 
 class User extends Connection {
 
@@ -22,7 +23,7 @@ class User extends Connection {
     $this->name = $name;
     $this->lastname = $lastname;
     $this->username = $username;
-    $this->password = $pword;
+    $this->password = $this->setPword($pword);
     $this->profile = $profile;
     $this->state = $state;
   }
@@ -43,7 +44,7 @@ class User extends Connection {
     $query = $this->connect->prepare('SELECT * FROM users WHERE id_user = :idUser');
     $query->execute(array('idUser'=> $idUser));
     if ($query->rowCount() != 0) {
-      return $query->fetch();
+      return $query->fetch(PDO::FETCH_ASSOC);
     }
     return false;
   }
@@ -74,7 +75,7 @@ class User extends Connection {
     $query = $this->connect->prepare('SELECT * FROM users WHERE username = :username AND password = :userpass');
     $query->execute(array(':username'=> $username, ':userpass'=> $userpass));
     if ($query->rowCount() != 0) {
-      $result = $query->fetch();
+      $result = $query->fetch(PDO::FETCH_ASSOC);
       if ($result['state'] === 'Activo') {
         session_start();
         $_SESSION['USERNAME'] = $result['username'];
@@ -86,6 +87,18 @@ class User extends Connection {
       }
     }
     return 0;
+  }
+
+  public function setPword(string $pword) {
+    $conf = new Config();
+    $pword_encrypted = openssl_encrypt($pword, $conf->getEncryptValues()[0], $conf->getEncryptValues()[1], 0, $conf->getEncryptValues()[2]);
+    return $pword_encrypted;
+  }
+
+  public function getPword(string $pwordEnc) {
+    $conf = new Config();
+    $pword_decrypted = openssl_decrypt($pwordEnc, $conf->getEncryptValues()[0], $conf->getEncryptValues()[1], 0, $conf->getEncryptValues()[2]);
+    return $pword_decrypted;
   }
 
   public function getConnection() {

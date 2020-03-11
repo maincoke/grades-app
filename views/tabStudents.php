@@ -164,14 +164,14 @@ $(".action-student").click(function(event)  {
       data: { 'id_student': studentid },
       success: function(data) {
         if (data) {
-          $('#idstudent').val(data[0].id_student);
-          $('#nameStd').val(data[0].name);
-          $('#lastnameStd').val(data[0].lastname);
-          $('#numdocStd').val(data[0].document).prop('disabled', true);
-          $('#usermailStd').val(data[0].email);
-          $('#usernameStd').val(data[0].username).prop('disabled', true);
-          $('#userpassStd').val(data[0].password);
-          $('#confirmStd').val(data[0].password);
+          $('#idstudent').val(data.id_student);
+          $('#nameStd').val(data.name);
+          $('#lastnameStd').val(data.lastname);
+          $('#numdocStd').val(data.document).prop('disabled', true);
+          $('#usermailStd').val(data.email);
+          $('#usernameStd').val(data.username).prop('disabled', true);
+          $('#userpassStd').val(data.password);
+          $('#confirmStd').val(data.password);
         } else {
           alert('No existe el registro! Intente de nuevo..!!');
         }
@@ -232,15 +232,15 @@ $(".active-student").click(function(event) {
   event.preventDefault();
   var studentid = $(this).prop('value');
   var studentStateSw = $(this).html() == "Desactivar" ? "Activar": "Desactivar";
-  $.ajax({ url: '../controlers/getDatastudent.php',
+  $.ajax({ url: '../controlers/getDataStudent.php',
     method: 'POST',
     dataType: 'json',
     data: { 'id_student': studentid },
     success: function(data) {
       if (data) {
         $('#modal-active-student').dialog('option', 'title', (studentStateSw == "Activar" ? "Desactivar" : "Activar") + " Estudiante");
-        $('#studentId').val(data[0].id_user);
-        $('#studentName').text(data[0].name + " " + data[0].lastname);
+        $('#studentId').val(data.id_user);
+        $('#studentName').text(data.name + " " + data.lastname);
         $('#studentState').text(studentStateSw == "Activar" ? "desactivado" : "activado");
         studentStateSw == "Activar" ? $('#activeIcon').removeClass('ui-icon-circle-arrow-n').addClass('ui-icon-circle-arrow-s') :
         $('#activeIcon').removeClass('ui-icon-circle-arrow-s').addClass('ui-icon-circle-arrow-n');

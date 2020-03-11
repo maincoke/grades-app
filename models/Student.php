@@ -38,7 +38,7 @@ class Student extends User {
     $query = $this->connect->prepare('SELECT * FROM users AS u INNER JOIN students AS a ON u.id_user = a.id_student WHERE u.id_user = :idStudent');
     $query->execute(array('idStudent' => $idStudent));
     if ($query->rowCount() != 0) {
-      return $query->fetchAll();
+      return $query->fetch(PDO::FETCH_ASSOC);
     }
     return false;
   }
@@ -48,7 +48,7 @@ class Student extends User {
                                      ' WHERE u.profile = "Estudiante"');
     $query->execute();
     if ($query->rowCount() != 0) {
-      return $query->fetchAll();
+      return $query->fetchAll(PDO::FETCH_ASSOC);
     }
     return false;
   }

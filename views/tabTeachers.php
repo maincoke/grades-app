@@ -105,14 +105,14 @@ $(".action-teacher").click(function(event)  {
       data: { 'id_teacher': teacherid },
       success: function(data) {
         if (data) {
-          $('#idteacher').val(data[0].id_teacher);
-          $('#nameTch').val(data[0].name);
-          $('#lastnameTch').val(data[0].lastname);
-          $('#numdocTch').val(data[0].document).prop('disabled', true);
-          $('#usermailTch').val(data[0].email);
-          $('#usernameTch').val(data[0].username).prop('disabled', true);
-          $('#userpassTch').val(data[0].password);
-          $('#confirmTch').val(data[0].password);
+          $('#idteacher').val(data.id_teacher);
+          $('#nameTch').val(data.name);
+          $('#lastnameTch').val(data.lastname);
+          $('#numdocTch').val(data.document).prop('disabled', true);
+          $('#usermailTch').val(data.email);
+          $('#usernameTch').val(data.username).prop('disabled', true);
+          $('#userpassTch').val(data.password);
+          $('#confirmTch').val(data.password);
         } else {
           alert('No existe el registro! Intente de nuevo..!!');
         }
@@ -179,8 +179,8 @@ $(".active-teacher").click(function(event) {
     success: function(data) {
       if (data) {
         $('#modal-active-teacher').dialog('option', 'title', (teacherStateSw == "Activar" ? "Desactivar" : "Activar") + " Docente");
-        $('#teacherId').val(data[0].id_user);
-        $('#teacherName').text(data[0].name + " " + data[0].lastname);
+        $('#teacherId').val(data.id_user);
+        $('#teacherName').text(data.name + " " + data.lastname);
         $('#teacherState').text(teacherStateSw == "Activar" ? "desactivado" : "activado");
         teacherStateSw == "Activar" ? $('#activeIcon').removeClass('ui-icon-circle-arrow-n').addClass('ui-icon-circle-arrow-s') :
         $('#activeIcon').removeClass('ui-icon-circle-arrow-s').addClass('ui-icon-circle-arrow-n');

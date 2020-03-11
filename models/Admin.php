@@ -38,7 +38,7 @@ class Admin extends User {
     $query = $this->connect->prepare('SELECT * FROM users AS u INNER JOIN admins AS a ON u.id_user = a.id_admin WHERE u.id_user = :idAdmin');
     $query->execute(array('idAdmin' => $idAdmin));
     if ($query->rowCount() != 0) {
-      return $query->fetchAll();
+      return $query->fetch(PDO::FETCH_ASSOC);
     }
     return false;
   }
@@ -48,7 +48,7 @@ class Admin extends User {
                                      ' WHERE u.profile = "Administrador"');
     $query->execute();
     if ($query->rowCount() != 0) {
-      return $query->fetchAll();
+      return $query->fetchAll(PDO::FETCH_ASSOC);
     }
     return false;
   }

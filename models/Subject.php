@@ -29,9 +29,18 @@ class Subject extends Connection {
 
   public function fetchDataSubject(int $subjectId) {
     $query = $this->connect->prepare('SELECT * FROM subjects WHERE id_subject = :subjectId');
-    $query->execute(array('SubjectId'=> $subjectId));
+    $query->execute(array('subjectId'=> $subjectId));
     if ($query->rowCount() != 0) {
-      return $query->fetch();
+      return $query->fetch(PDO::FETCH_ASSOC);
+    }
+    return false;
+  }
+
+  public function fetchDataSubjectMatter(String $subjectMatter) {
+    $query = $this->connect->prepare('SELECT * FROM subjects WHERE subjectmatter = :subjectMatter');
+    $query->execute(array('subjectMatter'=> $subjectMatter));
+    if ($query->rowCount() != 0) {
+      return true;
     }
     return false;
   }
@@ -39,12 +48,12 @@ class Subject extends Connection {
   public function fetchAllSubjects() {
     $query = $this->connect->prepare('SELECT * FROM subjects');
     $query->execute();
-    return $query->fetchAll();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
   }
 
-  public function updateData(int $subjectId) {
+  public function updateDataSubject(int $subjectId) {
     $query = $this->connect->prepare('UPDATE subjects SET subjectmatter = :subjectMatter WHERE id_subject = :subjectId');
-    $query->execute(array(':subjectId'=> $subjectId));
+    $query->execute(array(':subjectId'=> $subjectId, ':subjectMatter'=> $this->subjectmatter));
   }
 
   public function getConnection() {
